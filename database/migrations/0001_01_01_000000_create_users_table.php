@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->integer('role'); //1 = Mahasiswa // 2 = Manager // 3 = Prodi // 4 =
+            $table->integer('role')->default(1); //1 = Mahasiswa // 2 = Manager // 3 = Prodi // 4 =
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

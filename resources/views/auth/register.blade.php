@@ -16,6 +16,17 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+<<<<<<< Updated upstream
+=======
+        <!-- Email Address -->
+        <div class="mt-4">
+            <x-input-label for="nrp" :value="__('NRP')" />
+            <x-text-input id="nrp" class="block mt-1 w-full" type="text" name="nrp" :value="old('nrp')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('nrp')" class="mt-2" />
+        </div>
+
+
+>>>>>>> Stashed changes
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
