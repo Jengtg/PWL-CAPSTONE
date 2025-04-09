@@ -9,6 +9,11 @@ class ProgramStudi extends Model
 {
     use HasFactory;
 
-    protected $table = 'program_studi'; // Pastikan sesuai dengan nama tabel di database
-    protected $fillable = ['name']; // Kolom yang bisa diisi melalui Eloquent
+    protected $table = 'program_studi';
+    protected $fillable = ['name'];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'prodi_id');
+    }
 }

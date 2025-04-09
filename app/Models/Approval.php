@@ -9,15 +9,25 @@ class Approval extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['surat_id', 'approved_by', 'status', 'comment'];
+    protected $fillable = [
+        'surat_id',
+        'approved_by',
+        'status_id',
+        'comment',
+    ];
 
     public function surat()
     {
-        return $this->belongsTo(Surat::class, 'surat_id');
+        return $this->belongsTo(Surat::class);
     }
-
-    public function approvedBy()
+    
+    public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
     }
 }

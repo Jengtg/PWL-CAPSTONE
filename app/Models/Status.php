@@ -11,8 +11,15 @@ class Status extends Model
 
     protected $fillable = ['nama_status'];
 
+    public $timestamps = false;
+
     public function surat()
     {
-        return $this->hasMany(Surat::class, 'status_id');
+        return $this->hasMany(Surat::class);
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(Approval::class);
     }
 }

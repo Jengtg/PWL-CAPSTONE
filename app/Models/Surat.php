@@ -9,25 +9,31 @@ class Surat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'jenis_surat', 'status_id'];
+    protected $fillable = [
+        'user_id',
+        'jenis_surat',
+        'status_id',
+        'file_path',
+        'uploaded_by',
+    ];
 
-    public function mahasiswa()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function status()
     {
-        return $this->belongsTo(Status::class, 'status_id');
+        return $this->belongsTo(Status::class);
+    }
+
+    public function uploader()
+    {
+        return $this->belongsTo(User::class, 'uploaded_by');
     }
 
     public function approval()
     {
         return $this->hasOne(Approval::class);
-    }
-
-    public function dokumen()
-    {
-        return $this->hasOne(DokumenSurat::class);
     }
 }

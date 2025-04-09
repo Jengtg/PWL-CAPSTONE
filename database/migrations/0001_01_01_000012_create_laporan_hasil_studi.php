@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer('jumlah_sks');
             $table->timestamps();
         });
+        
     }
 
     public function down()

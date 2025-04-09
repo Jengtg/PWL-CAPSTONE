@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +10,6 @@ class SuratPengantarTugas extends Model
     use HasFactory;
 
     protected $table = 'surat_pengantar_tugas';
-
     protected $fillable = [
         'surat_id',
         'nrp',
@@ -21,7 +19,6 @@ class SuratPengantarTugas extends Model
         'dosen_pengampu',
         'instansi_tujuan',
         'alamat_instansi',
-        'tanggal_kegiatan',
     ];
 
     public function surat()

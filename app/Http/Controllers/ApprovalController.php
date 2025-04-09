@@ -2,32 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Approval;
 use App\Models\Surat;
+use App\Models\Status;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApprovalController extends Controller
 {
-    public function store(Request $request)
+    public function index()
+    {
+        $user = Auth::user();
+        $approvals = Approval::whereHas('surat.user', function ($query) use ($user) {
+            $query->where('prodi_id', $user->prodi_id);
+        })->get();
+
+        return view('approval.index', compact('approvals'));
+    }
+
+    public function create(Surat $surat)
+    {
+        $statuses = Status::all();
+        return view('approval.create', compact('surat', 'statuses'));
+    }
+
+    public function store(Request $request, Surat $surat)
     {
         $request->validate([
-            'surat_id' => 'required|exists:surat,id',
-            'status' => 'required|in:approved,rejected',
+            'status_id' => 'required|exists:statuses,id',
             'comment' => 'nullable|string',
         ]);
 
-        $approval = Approval::create([
-            'surat_id' => $request->surat_id,
-            'approved_by' => auth()->id(),
-            'status' => $request->status,
+        Approval::create([
+            'surat_id' => $surat->id,
+            'approved_by' => Auth::id(),
+            'status_id' => $request->status_id,
             'comment' => $request->comment,
         ]);
 
         // Update status surat
-        $surat = Surat::find($request->surat_id);
-        $surat->status_id = ($request->status == 'approved') ? 2 : 3; // 2: Disetujui, 3: Ditolak
-        $surat->save();
+        $surat->update(['status_id' => $request->status_id]);
 
-        return response()->json(['message' => 'Approval berhasil disimpan', 'approval' => $approval]);
+        return redirect()->route('surat.index')->with('success', 'Surat berhasil diperiksa.');
     }
 }

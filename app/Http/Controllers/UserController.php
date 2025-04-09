@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        // Hanya Master Admin yang boleh akses controller ini
+        $this->middleware('cekRole:Master Admin');
+    }
+
     public function index()
     {
         $users = User::with(['role', 'programStudi'])->get();
@@ -25,58 +31,67 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'id' => 'required|string|unique:users,id',
+        $validated = $request->validate([
+            'id' => 'required|string|max:7|unique:users,id',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
             'role_id' => 'required|exists:roles,id',
-            'prodi_id' => 'required|exists:program_studi,id',
+            'prodi_id' => 'nullable|exists:program_studi,id',
         ]);
 
-        User::create([
-            'id' => $request->id,
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $request->role_id,
-            'prodi_id' => $request->prodi_id,
-        ]);
+        // Jika role bukan Master Admin, prodi_id wajib diisi
+        $role = Role::find($validated['role_id']);
+        if ($role->name !== 'Master Admin' && !$validated['prodi_id']) {
+            return back()->withErrors(['prodi_id' => 'Program Studi wajib diisi untuk peran selain Master Admin']);
+        }
 
-        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan!');
+        $validated['password'] = Hash::make($validated['password']);
+        User::create($validated);
+
+        return redirect()->route('users.index')->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function edit(User $user)
+    public function edit($id)
     {
+        $user = User::findOrFail($id);
         $roles = Role::all();
         $prodis = ProgramStudi::all();
         return view('users.edit', compact('user', 'roles', 'prodis'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => "required|email|unique:users,email,$id,id",
             'password' => 'nullable|string|min:6',
             'role_id' => 'required|exists:roles,id',
-            'prodi_id' => 'required|exists:program_studi,id',
+            'prodi_id' => 'nullable|exists:program_studi,id',
         ]);
 
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-            'role_id' => $request->role_id,
-            'prodi_id' => $request->prodi_id,
-        ]);
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($request->password);
+        } else {
+            unset($validated['password']);
+        }
 
-        return redirect()->route('users.index')->with('success', 'User berhasil diupdate!');
+        // Jika bukan master admin, wajib punya prodi
+        $role = Role::find($validated['role_id']);
+        if ($role->name !== 'Master Admin' && !$validated['prodi_id']) {
+            return back()->withErrors(['prodi_id' => 'Program Studi wajib diisi untuk peran selain Master Admin']);
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('users.index')->with('success', 'User berhasil diperbarui.');
     }
 
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        $user->delete();
-        return redirect()->route('users.index')->with('success', 'User berhasil dihapus!');
+        User::findOrFail($id)->delete();
+        return redirect()->route('users.index')->with('success', 'User berhasil dihapus.');
     }
 }

@@ -14,10 +14,11 @@ return new class extends Migration {
             $table->string('nama');
             $table->string('program_studi');
             $table->date('tanggal_lulus');
-            $table->string('ipk', 5);
+            $table->decimal('ipk', 4, 2);
             $table->string('gelar');
             $table->timestamps();
         });
+        
     }
 
     public function down()
