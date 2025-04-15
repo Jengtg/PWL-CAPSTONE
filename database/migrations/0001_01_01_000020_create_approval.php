@@ -10,11 +10,15 @@ return new class extends Migration {
         Schema::create('approval', function (Blueprint $table) {
             $table->id();
             $table->foreignId('surat_id')->constrained('surat')->onDelete('cascade');
-            $table->foreignId('approved_by')->constrained('users');
+            
+            $table->string('approved_by', 7);
+            $table->foreign('approved_by')->references('id')->on('users');
+        
             $table->foreignId('status_id')->constrained('statuses');
             $table->text('comment')->nullable();
             $table->timestamps();
         });
+        
     }
 
     public function down()
