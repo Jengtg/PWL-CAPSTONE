@@ -13,12 +13,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Seed Roles
-        $roles = ['Master Admin', 'Tata Usaha', 'Kepala Prodi', 'Mahasiswa'];
-        foreach ($roles as $role) {
-            Role::create(['name' => $role]);
-        }
-
+        // Seed Master Admin
+        User::create([
+            'id' => 'admin01',
+            'name' => 'Master Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role_id' => Role::where('name', 'Master Admin')->first()->id,
+            'prodi_id' => null,
+        ]);
         // Seed Program Studi
         $programStudis = ['Teknik Informatika', 'Sistem Informasi', 'Magister Ilmu Komputer'];
         foreach ($programStudis as $prodi) {
@@ -31,14 +34,11 @@ class DatabaseSeeder extends Seeder
             Status::create(['nama_status' => $status]);
         }
 
-        // Seed Master Admin
-        User::create([
-            'id' => 'admin01',
-            'name' => 'Master Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
-            'role_id' => Role::where('name', 'Master Admin')->first()->id,
-            'prodi_id' => null,
-        ]);
+        // Seed Roles
+        $roles = ['Master Admin', 'Tata Usaha', 'Kepala Prodi', 'Mahasiswa'];
+        foreach ($roles as $role) {
+            Role::create(['name' => $role]);
+        }
+
     }
 }
