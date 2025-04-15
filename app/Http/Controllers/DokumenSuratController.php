@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DokumenSurat;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;  // Pastikan ini terimport
 
 class DokumenSuratController extends Controller
 {
@@ -20,7 +21,7 @@ class DokumenSuratController extends Controller
         $dokumen = DokumenSurat::create([
             'surat_id' => $request->surat_id,
             'file_path' => $filePath,
-            'uploaded_by' => auth()->id(),
+            'uploaded_by' => Auth::id(),  // Ganti menjadi Auth::id()
         ]);
 
         return response()->json(['message' => 'Dokumen berhasil diupload', 'dokumen' => $dokumen]);

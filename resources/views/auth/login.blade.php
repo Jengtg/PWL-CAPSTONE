@@ -7,9 +7,9 @@
 
         <!-- NRP -->
         <div>
-            <x-input-label for="nrp" :value="__('NRP')" />
-            <x-text-input id="nrp" class="block mt-1 w-full" type="text" name="nrp" :value="old('nrp')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('nrp')" class="mt-2" />
+            <x-input-label for="id" :value="__('NRP')" />
+            <x-text-input id="id" class="block mt-1 w-full" type="text" name="id" :value="old('id')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('id')" class="mt-2" />
         </div>
 
         <!-- Password -->
@@ -30,12 +30,16 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex items-center justify-between mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
+                {{ __('Belum punya akun?') }}
+            </a>
 
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
