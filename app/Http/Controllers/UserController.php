@@ -13,14 +13,23 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with(['role', 'programStudi'])->get();
+<<<<<<< Updated upstream
         return view('users.index', compact('users'));
+=======
+        return view('users.masteradmin.user.index', compact('users'));
+>>>>>>> Stashed changes
     }
 
     public function create()
     {
         $roles = Role::all();
+<<<<<<< Updated upstream
         $prodis = ProgramStudi::all();
         return view('users.create', compact('roles', 'prodis'));
+=======
+        $programStudi = ProgramStudi::all();
+        return view('users.masteradmin.user.create', compact('roles', 'programStudi'));
+>>>>>>> Stashed changes
     }
 
     public function store(Request $request)
@@ -49,8 +58,13 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
+<<<<<<< Updated upstream
         $prodis = ProgramStudi::all();
         return view('users.edit', compact('user', 'roles', 'prodis'));
+=======
+        $programStudi = ProgramStudi::all();
+        return view('users.masteradmin.user.edit', compact('user', 'roles', 'programStudi'));
+>>>>>>> Stashed changes
     }
 
     public function update(Request $request, User $user)

@@ -58,42 +58,83 @@
               </span>
               <span class="app-brand-text demo menu-text fw-bolder ms-2">Capstone</span>
             </a>
-
+            
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
               <i class="bx bx-chevron-left bx-sm align-middle"></i>
             </a>
           </div>
-
+          
           <div class="menu-inner-shadow"></div>
-
+          
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
-            <li class="menu-item active">
-              <a href="index.html" class="menu-link">
+            <li class="menu-item {{ Request::is('admin.dashboard') ? 'active' : '' }}">
+              <a href="{{route('admin.dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
+            
 
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Prodi</div>
-              </a>
-            </li>
+            {{-- Master Admin --}}
+            @if (Auth::check() && Auth::user()->role->name == 'Master Admin')
+              <li class="menu-item {{ Request::routeIs('users.index') ? 'active' : '' }}">
+                <a href="{{ route('users.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-collection"></i>
+                  <div data-i18n="Basic">User</div>
+                </a>
+              </li>
+            @endif
 
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
+            @if (Auth::check() && Auth::user()->role->name == 'Master Admin')
+              <li class="menu-item {{ Request::routeis('program-studi.index') ? 'active' : '' }}">
+                <a href="{{ route('program-studi.index') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-collection"></i>
+                  <div data-i18n="Basic">Menambah Prodi</div>
+                </a>
+              </li>
+            @endif
+
+            {{-- Mahasiswa --}}
+            @if (Auth::check() && Auth::user()->role->name == 'Mahasiswa')
+              <li class="menu-item {{ Request::is('cards-basic') ? 'active' : '' }}">
+                <a href="{{ url('cards-basic.html') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-collection"></i>
+                  <div data-i18n="Basic">Pengajuan Surat</div>
+                </a>
+              </li>
+            @endif
+
+            @if (Auth::check() && Auth::user()->role->name == 'Mahasiswa')
+            <li class="menu-item {{ Request::is('cards-basic') ? 'active' : '' }}">
+              <a href="{{ url('cards-basic.html') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Manager</div>
+                <div data-i18n="Basic">Status Pengajuan</div>
               </a>
             </li>
-      
-            <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
+          @endif
+
+          {{-- Kepala Prodi --}}
+          @if (Auth::check() && Auth::user()->role->name == 'Kepala Prodi')
+            <li class="menu-item {{ Request::is('cards-basic') ? 'active' : '' }}">
+              <a href="{{ url('cards-basic.html') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Tata Usaha</div>
+                <div data-i18n="Basic">Surat Diajukan</div>
               </a>
             </li>
+          @endif
+            
+
+
+          {{-- Tata Usaha --}}
+          @if (Auth::check() && Auth::user()->role->name == 'Tata Usaha')
+            <li class="menu-item {{ Request::is('cards-basic') ? 'active' : '' }}">
+              <a href="{{ url('cards-basic.html') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Membuat Surat</div>
+              </a>
+            </li>
+          @endif
+            
           </ul>
         </aside>
