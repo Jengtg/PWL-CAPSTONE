@@ -48,22 +48,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/statuses', [StatusController::class, 'index'])->name('statuses.index');
 });
 
+
 // ========== MASTER ADMIN ==========
 Route::middleware(['auth', CekRole::class . ':Master Admin'])->group(function () {
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::resource('users', UserController::class)->except(['show']);
 
     Route::resource('program-studi', ProgramStudiController::class);
 
-    Route::resource('users', UserController::class)->except(['show']);
+    Route::resource('jenis_surat', JenisSuratController::class);
 
     Route::get('/admin/dashboard', fn() => view('dashboard'))->name('admin.dashboard');
-
-    Route::resource('jenis_surat', JenisSuratController::class);
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 });
+
 
 // ========== TATA USAHA ==========
 Route::middleware(['auth', CekRole::class . ':Tata Usaha'])->group(function () {

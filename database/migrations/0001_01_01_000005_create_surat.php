@@ -9,13 +9,16 @@ return new class extends Migration {
     {
         Schema::create('surat', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('user_id', 7);
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('jenis_surat', 255);
-            $table->foreignId('status_id')->default(1)->constrained('statuses');
+            $table->foreignId('status_id')->constrained('statuses')->default(1);
             $table->string('file_path', 255)->nullable();
-            $table->foreignId('uploaded_by')->constrained('users')->nullable();
+            $table->string('uploaded_by', 7)->nullable();
+            $table->foreign('uploaded_by')->references('id')->on('users');
             $table->timestamps();
         });
+        
     }
 
     public function down()

@@ -7,21 +7,22 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('surat_keterangan_aktif', function (Blueprint $table) {
+        Schema::create('approval', function (Blueprint $table) {
             $table->id();
             $table->foreignId('surat_id')->constrained('surat')->onDelete('cascade');
-            $table->string('nrp');
-            $table->string('nama');
-            $table->string('program_studi');
-            $table->string('fakultas');
-            $table->string('semester');
-            $table->string('tahun_akademik');
+            
+            $table->string('approved_by', 7);
+            $table->foreign('approved_by')->references('id')->on('users');
+        
+            $table->foreignId('status_id')->constrained('statuses');
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
+        
     }
 
     public function down()
     {
-        Schema::dropIfExists('surat_keterangan_aktif');
+        Schema::dropIfExists('approval');
     }
 };
