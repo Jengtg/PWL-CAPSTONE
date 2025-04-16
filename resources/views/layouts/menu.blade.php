@@ -64,12 +64,13 @@
 
     {{-- Mahasiswa --}}
     @if ($role == 'Mahasiswa')
-      <li class="menu-item {{ Request::routeIs('surat.index') ? 'active' : '' }}">
-        <a href="{{ route('surat.index') }}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-collection"></i>
-          <div data-i18n="Basic">Pengajuan Surat</div>
-        </a>
+      <li class="menu-item {{ Request::routeIs('surat.create') ? 'active' : '' }}">
+          <a href="{{ route('surat.create') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-collection"></i>
+            <div data-i18n="Basic">Pengajuan Surat</div>
+          </a>
       </li>
+
 
       <li class="menu-item {{ Request::routeIs('statuses.index') ? 'active' : '' }}">
         <a href="{{ route('statuses.index') }}" class="menu-link">

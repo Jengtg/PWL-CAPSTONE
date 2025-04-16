@@ -76,16 +76,41 @@ Route::middleware(['auth', CekRole::class . ':Tata Usaha'])->group(function () {
 Route::middleware(['auth', CekRole::class . ':Kepala Prodi'])->group(function () {
     Route::get('kaprodi/dashboard', fn() => view('kaprodi.dashboard'))->name('kaprodi.dashboard');
 
-    // Tambahkan route khusus Kepala Prodi jika ada
+    // Pengelolaan surat masuk (approval)
+    Route::get('kaprodi/surat', [ApprovalController::class, 'index'])->name('kaprodi.surat.index');
+    Route::post('kaprodi/surat/{id}/approve', [ApprovalController::class, 'approve'])->name('kaprodi.surat.approve');
+    Route::post('kaprodi/surat/{id}/reject', [ApprovalController::class, 'reject'])->name('kaprodi.surat.reject');
 });
 
-// ========== MAHASISWA ==========
+
+// ========== MAHASISWA ========== 
 Route::middleware(['auth', CekRole::class . ':Mahasiswa'])->group(function () {
+    // Dashboard untuk Mahasiswa
     Route::get('mahasiswa/dashboard', fn() => view('dashboard'))->name('mahasiswa.dashboard');
-    Route::resource('surat', SuratController::class);
-    Route::get('/mahasiswa/dashboard', [SuratController::class, 'index'])->name('mahasiswa.dashboard');
-    Route::post('/dokumen_surat', [DokumenSuratController::class, 'store']);
-    Route::get('/dokumen_surat/{id}/download', [DokumenSuratController::class, 'download'])->name('dokumen_surat.download');
+    Route::get('/surat/pengajuan', [SuratController::class, 'create'])->name('surat.create');
+
+    Route::get('create', [SuratController::class, 'create'])->name('create');
+    
+    Route::get('aktif/create', [SuratController::class, 'createAktif'])->name('aktif.create');
+    Route::post('aktif', [SuratController::class, 'storeAktif'])->name('aktif.store');
+
+    Route::get('lulus/create', [SuratController::class, 'createLulus'])->name('lulus.create');
+    Route::post('lulus', [SuratController::class, 'storeLulus'])->name('lulus.store');
+
+    Route::get('tugas/create', [SuratController::class, 'createTugas'])->name('tugas.create');
+    Route::post('tugas', [SuratController::class, 'storeTugas'])->name('tugas.store');
+
+    Route::get('studi/create', [SuratController::class, 'createStudi'])->name('studi.create');
+    Route::post('studi', [SuratController::class, 'storeStudi'])->name('studi.store');
+
+    // Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
+    // Route::get('/surat', [SuratController::class, 'index'])->name('surat.index'); // Rute untuk halaman index surat
+    // Route::post('/surat', [SuratController::class, 'store'])->name('surat.store'); // Rute untuk menyimpan pengajuan surat
+    // Route::get('/surat/{id}', [SuratController::class, 'show'])->name('surat.show'); // Rute untuk melihat detail surat
+    // Route::get('/surat/download/{id}', [SuratController::class, 'download'])->name('surat.download'); // Rute untuk mendownload surat
+    
+    // Halaman Pengajuan Surat (index) untuk Mahasiswa
+    Route::resource('surat', SuratController::class)->only(['index', 'store']);
 });
 
 // ========== APPROVAL KHUSUS KEPRODI & TU ==========
