@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -13,7 +12,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => env('FILESYSTEM_DISK', 'public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -32,32 +31,24 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
-            'serve' => true,
+            'root' => storage_path('app'), // Menyimpan file di folder 'storage/app'
             'throw' => false,
-            'report' => false,
         ],
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => storage_path('app/public'), // Folder public untuk file yang dapat diakses secara publik
             'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
+            'visibility' => 'public', // File yang disimpan di sini dapat diakses secara publik
             'throw' => false,
-            'report' => false,
         ],
 
-        's3' => [
-            'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+        'surat_files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/surat_files'), // Folder untuk file PDF surat
+            'url' => env('APP_URL').'/storage/surat_files', // URL akses file
+            'visibility' => 'public', // File yang disimpan di sini dapat diakses secara publik
             'throw' => false,
-            'report' => false,
         ],
 
     ],
@@ -75,6 +66,6 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('surat_files') => storage_path('app/public/surat_files'), // Simbolik link untuk surat_files
     ],
-
 ];

@@ -67,7 +67,12 @@ Route::middleware(['auth', CekRole::class . ':Master Admin'])->group(function ()
 
 // ========== TATA USAHA ==========
 Route::middleware(['auth', CekRole::class . ':Tata Usaha'])->group(function () {
-    Route::get('tatausaha.dashboard', fn() => view('tatausaha.dashboard'))->name('tataUsaha.dashboard');
+    Route::get('tatausaha.dashboard', fn() => view('dashboard'))->name('tataUsaha.dashboard');
+    Route::get('/tu/surat', [SuratController::class, 'indexTataUsaha'])->name('tu.surat.index');
+    Route::get('/tu/surat/{id}/data', [SuratController::class, 'showSuratIsi'])->name('tu.surat.data');
+    Route::post('/tu/surat/{id}/upload', [SuratController::class, 'uploadPDF'])->name('tu.surat.upload');
+
+
 
     // Tambahkan route khusus Tata Usaha jika ada
 });

@@ -92,13 +92,14 @@
 
     {{-- Tata Usaha --}}
     @if ($role == 'Tata Usaha')
-      <li class="menu-item {{ Request::is('membuat-surat') ? 'active' : '' }}">
-        <a href="{{ url('membuat-surat') }}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-collection"></i>
-          <div data-i18n="Basic">Membuat Surat</div>
-        </a>
-      </li>
+        <li class="menu-item {{ Request::is('tu/surat') ? 'active' : '' }}">
+            <a href="{{ route('tu.surat.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div data-i18n="Basic">Daftar Surat Disetujui</div>
+            </a>
+        </li>
     @endif
+
 
   </ul>
 </aside>

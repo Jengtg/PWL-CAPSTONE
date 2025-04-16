@@ -41,6 +41,51 @@ class SuratController extends Controller
         return view('users.mahasiswa.create', compact('jenis_surats'));
     }
 
+
+    public function showSuratIsi($id)
+    {
+        $surat = Surat::with('user')->findOrFail($id);
+    
+        switch ($surat->jenis_surat) {
+            case 'Surat Keterangan Mahasiswa Aktif':
+                $data = SuratKeteranganAktif::where('surat_id', $id)->first();
+                return view('users.TU.aktif', compact('surat', 'data'));
+    
+            case 'Surat Pengantar Tugas Mata Kuliah':
+                $data = SuratPengantarTugas::where('surat_id', $id)->first();
+                return view('users.TU.tugas', compact('surat', 'data'));
+    
+            case 'Surat Keterangan Lulus':
+                $data = SuratKeteranganLulus::where('surat_id', $id)->first();
+                return view('users.TU.lulus', compact('surat', 'data'));
+    
+            case 'Laporan Hasil Studi':
+                $data = LaporanHasilStudi::where('surat_id', $id)->first();
+                return view('users.TU.studi', compact('surat', 'data'));
+    
+            default:
+                abort(404, 'Jenis surat tidak dikenal.');
+        }
+    }
+    
+
+public function uploadPDF(Request $request, $id)
+{
+    $request->validate([
+        'file' => 'required|mimes:pdf|max:2048',
+    ]);
+
+    $surat = Surat::findOrFail($id);
+
+    $filePath = $request->file('file')->store('surat_pdf', 'public');
+
+    $surat->file_path = $filePath;
+    $surat->save();
+
+    return redirect()->back()->with('success', 'File PDF berhasil diunggah.');
+}
+
+
 // Form Surat Keterangan Mahasiswa Aktif
 public function createAktif()
 {
@@ -76,6 +121,26 @@ public function createStudi()
 
     return view('users.mahasiswa.surat.studi-create', compact('user', 'surat_id'));
 }
+
+public function indexTataUsaha()
+{
+    $user = Auth::user();
+
+    // Ambil 2 digit awal dari user_id TU (untuk memeriksa prodi)
+    $prodiTU = substr($user->id, 0, 2);
+
+    // Ambil semua surat yang disetujui dan prodi cocok
+    $surats = Surat::with(['user', 'jenisSurat'])
+        ->where('status_id', 2) // Surat yang disetujui
+        ->whereHas('user', function ($query) use ($prodiTU) {
+            // Menyesuaikan dengan prodi TU berdasarkan ID
+            $query->whereRaw('SUBSTRING(id, 3, 2) = ?', [$prodiTU]);
+        })
+        ->get();
+
+    return view('users.TU.index', compact('surats'));
+}
+
 
 
     public function storeAktif(Request $request)
