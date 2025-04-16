@@ -83,9 +83,9 @@ Route::middleware(['auth', CekRole::class . ':Kepala Prodi'])->group(function ()
 Route::middleware(['auth', CekRole::class . ':Mahasiswa'])->group(function () {
     Route::get('mahasiswa/dashboard', fn() => view('dashboard'))->name('mahasiswa.dashboard');
     Route::resource('surat', SuratController::class);
-    // Route::get('/mahasiswa/dashboard', [SuratController::class, 'index'])->name('mahasiswa.dashboard');
-    // Route::post('/dokumen_surat', [DokumenSuratController::class, 'store']);
-    // Route::get('/dokumen_surat/{id}/download', [DokumenSuratController::class, 'download'])->name('dokumen_surat.download');
+    Route::get('/mahasiswa/dashboard', [SuratController::class, 'index'])->name('mahasiswa.dashboard');
+    Route::post('/dokumen_surat', [DokumenSuratController::class, 'store']);
+    Route::get('/dokumen_surat/{id}/download', [DokumenSuratController::class, 'download'])->name('dokumen_surat.download');
 });
 
 // ========== APPROVAL KHUSUS KEPRODI & TU ==========

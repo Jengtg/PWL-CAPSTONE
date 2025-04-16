@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
         }
 
         // Seed Statuses
-        // $statuses = ['Menunggu Persetujuan', 'Disetujui', 'Ditolak'];
-        // foreach ($statuses as $status) {
-        //     Status::create(['nama_status' => $status]);
-        // }
+        $statuses = ['Menunggu Persetujuan', 'Disetujui', 'Ditolak'];
+        foreach ($statuses as $status) {
+            Status::create(['nama_status' => $status]);
+        }
 
         // Seed Roles
         $roles = ['Master Admin', 'Tata Usaha', 'Kepala Prodi', 'Mahasiswa'];
