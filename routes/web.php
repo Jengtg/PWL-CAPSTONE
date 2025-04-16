@@ -74,13 +74,13 @@ Route::middleware(['auth', CekRole::class . ':Tata Usaha'])->group(function () {
 
 // ========== KEPALA PRODI ==========
 Route::middleware(['auth', CekRole::class . ':Kepala Prodi'])->group(function () {
-    Route::get('kaprodi/dashboard', fn() => view('kaprodi.dashboard'))->name('kaprodi.dashboard');
-
-    // Pengelolaan surat masuk (approval)
+    Route::get('kaprodi/dashboard', fn() => view('dashboard'))->name('kaprodi.dashboard');
+    
     Route::get('kaprodi/surat', [ApprovalController::class, 'index'])->name('kaprodi.surat.index');
     Route::post('kaprodi/surat/{id}/approve', [ApprovalController::class, 'approve'])->name('kaprodi.surat.approve');
     Route::post('kaprodi/surat/{id}/reject', [ApprovalController::class, 'reject'])->name('kaprodi.surat.reject');
 });
+
 
 
 // ========== MAHASISWA ========== 
@@ -103,6 +103,9 @@ Route::middleware(['auth', CekRole::class . ':Mahasiswa'])->group(function () {
     Route::get('studi/create', [SuratController::class, 'createStudi'])->name('studi.create');
     Route::post('studi', [SuratController::class, 'storeStudi'])->name('studi.store');
 
+    Route::get('/mahasiswa/status', [StatusController::class, 'indexMahasiswa'])->name('mahasiswa.status.index');
+
+
     // Route::get('/surat/create', [SuratController::class, 'create'])->name('surat.create');
     // Route::get('/surat', [SuratController::class, 'index'])->name('surat.index'); // Rute untuk halaman index surat
     // Route::post('/surat', [SuratController::class, 'store'])->name('surat.store'); // Rute untuk menyimpan pengajuan surat
@@ -115,6 +118,6 @@ Route::middleware(['auth', CekRole::class . ':Mahasiswa'])->group(function () {
 
 // ========== APPROVAL KHUSUS KEPRODI & TU ==========
 Route::middleware(['auth', CekRole::class . ':Kepala Prodi,Tata Usaha'])->post('/approval', [ApprovalController::class, 'store'])->name('approval.store');
-
+Route::get('mahasiswa/dashboard', fn() => view('dashboard'))->name('mahasiswa.dashboard');
 // ========== AUTH ROUTES ==========
 require __DIR__.'/auth.php';

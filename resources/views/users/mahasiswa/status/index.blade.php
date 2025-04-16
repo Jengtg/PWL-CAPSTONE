@@ -1,85 +1,33 @@
-@extends('layouts.app')
+@extends('layouts.master')
 
-@section('content')
-<div class="container">
-    <h2>Status Pengajuan Surat</h2>
-
-    <div id="status-table-container">
-        <p>Memuat data...</p>
-    </div>
-</div>
-@endsection
-
-@section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', async function () {
-    const container = document.getElementById('status-table-container');
-
-    try {
-        const response = await fetch("{{ route('statuses.index') }}", {
-            headers: {
-                'Accept': 'application/json',
-            }
-        });
-
-        const result = await response.json();
-
-        if (!result.success && !Array.isArray(result)) {
-            container.innerHTML = '<p>Gagal memuat data surat.</p>';
-            return;
-        }
-
-        const suratList = Array.isArray(result) ? result : result.data;
-
-        if (suratList.length === 0) {
-            container.innerHTML = '<p>Anda belum mengajukan surat apapun.</p>';
-            return;
-        }
-
-        let html = `
-            <table class="table table-bordered">
+@section('web-content')
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h5>Daftar Status Surat</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>No</th>
+                        <th>NRP</th>
                         <th>Jenis Surat</th>
-                        <th>Status</th>
+                        <th>Nama Status</th>
                     </tr>
                 </thead>
                 <tbody>
-        `;
-
-        suratList.forEach(item => {
-            let statusText = 'Tidak Diketahui';
-
-            switch (item.status_id) {
-                case 1:
-                    statusText = 'Menunggu Persetujuan';
-                    break;
-                case 2:
-                    statusText = 'Disetujui';
-                    break;
-                case 3:
-                    statusText = 'Ditolak';
-                    break;
-            }
-
-            html += `
-                <tr>
-                    <td>${item.jenis_surat}</td>
-                    <td>${statusText}</td>
-                </tr>
-            `;
-        });
-
-        html += `
+                    @foreach ($statuses as $index => $status)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $status->mahasiswa->id }}</td>
+                            <td>{{ $status->jenis_surat }}</td>
+                            <td>{{ $status->status->nama_status }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
-        `;
-
-        container.innerHTML = html;
-
-    } catch (error) {
-        container.innerHTML = '<p>Terjadi kesalahan saat memuat data.</p>';
-    }
-});
-</script>
+        </div>
+    </div>
+</div>
 @endsection
