@@ -10,11 +10,16 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public $incrementing = false;
     protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $fillable = [
-        'id', 'name', 'email', 'password', 'role_id', 'prodi_id',
+        'id',
+        'name',
+        'email',
+        'password',
+        'role_id',
+        'prodi_id',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -27,5 +32,10 @@ class User extends Authenticatable
     public function programStudi()
     {
         return $this->belongsTo(ProgramStudi::class, 'prodi_id');
+    }
+
+    public function surat()
+    {
+        return $this->hasMany(Surat::class);
     }
 }

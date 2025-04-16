@@ -82,12 +82,13 @@
 
     {{-- Kepala Prodi --}}
     @if ($role == 'Kepala Prodi')
-      <li class="menu-item {{ Request::is('surat-diajukan') ? 'active' : '' }}">
-        <a href="{{ url('surat-diajukan') }}" class="menu-link">
-          <i class="menu-icon tf-icons bx bx-collection"></i>
-          <div data-i18n="Basic">Surat Diajukan</div>
-        </a>
-      </li>
+    <li class="menu-item {{ Request::routeIs('kaprodi.surat.index') ? 'active' : '' }}">
+      <a href="{{ route('kaprodi.surat.index') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-collection"></i>
+        <div data-i18n="Basic">Surat Diajukan</div>
+      </a>
+    </li>
+    
     @endif
 
     {{-- Tata Usaha --}}

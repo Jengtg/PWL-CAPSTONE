@@ -3,35 +3,86 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Approval;
-use App\Models\Surat;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Surat;
+use App\Models\Approval;
 
 class ApprovalController extends Controller
 {
-    public function store(Request $request)
+    // List surat yang menunggu approval Kaprodi
+// App\Http\Controllers\ApprovalController.php
+public function index()
+{
+    $user = Auth::user();
+
+    // Eager loading relationships
+    $surats = Surat::with(['mahasiswa', 'jenis', 'status'])
+                    ->whereHas('mahasiswa', function ($query) use ($user) {
+                        $query->where('prodi_id', $user->prodi_id);
+                    })
+                    ->where('status_id', 1) // Status 1 = Menunggu
+                    ->get();
+
+    return view('users.prodi.index', compact('surats'));
+}
+
+
+    // Disetujui langsung oleh Kaprodi
+    public function approve($id, Request $request)
     {
-        // Validasi data
-        $request->validate([
-            'surat_id' => 'required|exists:surat,id', // Pastikan surat id ada
-            'status' => 'required|in:approved,rejected', // Status hanya boleh approved atau rejected
-            'comment' => 'nullable|string', // Komentar opsional
-        ]);
-
-        // Membuat data approval baru
-        $approval = Approval::create([
-            'surat_id' => $request->surat_id,
-            'approved_by' => Auth::id(), // Gunakan Auth::id() untuk mendapatkan ID user yang login
-            'status' => $request->status,
-            'comment' => $request->comment,
-        ]);
-
-        // Mengupdate status surat
-        $surat = Surat::findOrFail($request->surat_id);
-        $surat->status_id = ($request->status == 'approved') ? 2 : 3; // 2: Disetujui, 3: Ditolak
+        $surat = Surat::findOrFail($id);
+        $surat->status_id = 2; // 2 = Disetujui
         $surat->save();
 
-        // Mengembalikan response JSON atau bisa dengan redirect
-        return redirect()->route('kaprodi.surat.index')->with('success', 'Approval berhasil disimpan');
+        Approval::create([
+            'surat_id' => $surat->id,
+            'approved_by' => Auth::id(),
+            'status_id' => 2,
+            'comment' => $request->comment
+        ]);
+
+        return redirect()->back()->with('success', 'Surat berhasil disetujui.');
+    }
+
+    // Ditolak langsung oleh Kaprodi
+    public function reject($id, Request $request)
+    {
+        $surat = Surat::findOrFail($id);
+        $surat->status_id = 3; // 3 = Ditolak
+        $surat->save();
+
+        Approval::create([
+            'surat_id' => $surat->id,
+            'approved_by' => Auth::id(),
+            'status_id' => 3,
+            'comment' => $request->comment
+        ]);
+
+        return redirect()->back()->with('success', 'Surat berhasil ditolak.');
+    }
+
+    // Approval oleh Kaprodi atau TU via form
+    public function store(Request $request)
+    {
+        $request->validate([
+            'surat_id' => 'required|exists:surat,id',
+            'status_id' => 'required|exists:statuses,id',
+            'comment' => 'nullable|string'
+        ]);
+
+        // Simpan approval
+        Approval::create([
+            'surat_id' => $request->surat_id,
+            'approved_by' => Auth::id(),
+            'status_id' => $request->status_id,
+            'comment' => $request->comment
+        ]);
+
+        // Update status surat-nya
+        $surat = Surat::findOrFail($request->surat_id);
+        $surat->status_id = $request->status_id;
+        $surat->save();
+
+        return redirect()->back()->with('success', 'Approval berhasil disimpan.');
     }
 }

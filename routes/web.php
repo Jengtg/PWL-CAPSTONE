@@ -75,11 +75,12 @@ Route::middleware(['auth', CekRole::class . ':Tata Usaha'])->group(function () {
 // ========== KEPALA PRODI ==========
 Route::middleware(['auth', CekRole::class . ':Kepala Prodi'])->group(function () {
     Route::get('kaprodi/dashboard', fn() => view('dashboard'))->name('kaprodi.dashboard');
-    
+
     Route::get('kaprodi/surat', [ApprovalController::class, 'index'])->name('kaprodi.surat.index');
     Route::post('kaprodi/surat/{id}/approve', [ApprovalController::class, 'approve'])->name('kaprodi.surat.approve');
     Route::post('kaprodi/surat/{id}/reject', [ApprovalController::class, 'reject'])->name('kaprodi.surat.reject');
 });
+
 
 
 

@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->string('approved_by', 7);
             $table->foreign('approved_by')->references('id')->on('users');
         
-            $table->foreignId('status_id')->constrained('statuses');
+            $table->foreign('status_id')->references('id')->on('statuses');
+
             $table->text('comment')->nullable();
             $table->timestamps();
         });
